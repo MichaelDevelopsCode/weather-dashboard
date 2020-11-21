@@ -1,0 +1,13 @@
+header {
+    background-color: #212529;
+    color: white;
+}
+
+.search-col {
+    background-color: whitesmoke;
+}
+
+#user-form .btn {
+    background-color: cornflowerblue;
+    color: white;
+} 
