@@ -1,11 +1,19 @@
 var apiKey = "appId=bc9f6ddfab3a7a8e6e4b64e7c936aeb9";
 var searchEl = document.getElementById("citySearch");
 var historyEl = document.getElementById("history"); 
+var cityHeadingEl = document.getElementById("city-heading");
+var tempEl = document.getElementById("temp");
+var humidityEl = document.getElementById("humidity");
+var windEl = document.getElementById("wind");
+var uvEl = document.getElementById("uv");
 
-var savedCities = ["altamonte springs", "orlando", "new york"];
+var savedCities = [];
 
-// load history from local storage if available
+// load history from local storage
 var loadHistory = function() {
+    // set only if theres something in local storage
+    var localStorageCities = localStorage.getItem("city");
+    savedCities = localStorageCities ? JSON.parse(localStorageCities) : [];
     // add all cities to list element
     savedCities.forEach(element => {
         // create list elements and add text
@@ -17,6 +25,13 @@ var loadHistory = function() {
         historyEl.appendChild(cityItem);
     });
 };
+
+// save to local storage and populate list right away
+var saveHistory = function() {
+    savedCities.push(cityName);
+    localStorage.setItem("city", JSON.stringify(savedCities));
+    loadHistory();
+}
 
 
 var citySearchSubmit = function(event) {
@@ -31,15 +46,34 @@ var citySearchSubmit = function(event) {
         .then(function(response) {
             // if request successful
             if(response.ok) {
-                // city was accepted so save to local storage
-                //localStorage.setItem("city")
-                console.log(cityName);
+
+                // city was accepted so update array if NOT already in there and save to local storage
+                if(!savedCities.includes(cityName)) {
+                    saveHistory();
+                }
+
+                response.json().then(function(data) {
+                    // create current weather conditions
+                    createCurrentConditions(data);
+                });
+
             } else {
-                alert("something went wrong");
+                alert("something went wrong"); // request not sucessful
             }
 
         });
 
+}
+
+var createCurrentConditions = function(data) {
+    // grab data and assign
+    var cityName = data.name;
+    var cityTemp = data.main.temp;
+    var cityHumidity = data.main.humidity;
+
+    // update content
+    cityHeadingEl.textContent = cityName;
+    console.log(data.name);
 }
 
 
