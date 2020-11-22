@@ -6,6 +6,7 @@ var tempEl = document.getElementById("temp");
 var humidityEl = document.getElementById("humidity");
 var windEl = document.getElementById("wind");
 var uvEl = document.getElementById("uv");
+var currentCondEl = document.getElementById("current-conditions");
 
 var savedCities = [];
 
@@ -42,7 +43,7 @@ var citySearchSubmit = function(event) {
     var cityName = searchEl.value;
 
     // fetch api
-    fetch("https://api.openweathermap.org/data/2.5/weather?q="+ cityName +"&"+apiKey)
+    fetch("https://api.openweathermap.org/data/2.5/weather?q="+ cityName + "&units=imperial" +"&"+apiKey)
         .then(function(response) {
             // if request successful
             if(response.ok) {
@@ -68,12 +69,20 @@ var citySearchSubmit = function(event) {
 var createCurrentConditions = function(data) {
     // grab data and assign
     var cityName = data.name;
-    var cityTemp = data.main.temp;
+    var cityTemp = data.main.temp; // kelvin to fahrenheit
     var cityHumidity = data.main.humidity;
+    var windSpeed = data.wind.speed; // convert from meters per sec to mph
+    //var uvIndex = data
 
     // update content
     cityHeadingEl.textContent = cityName;
-    console.log(data.name);
+    tempEl.textContent = "Temperature: " + cityTemp + "°F";
+    humidityEl.textContent = "Humidity: " + cityHumidity + "%";
+    windEl.textContent = "Wind Speed: " + windSpeed + " MPH";
+    // uvEl.textContent = "UV Index: " + "";
+    currentCondEl.classList = "card p-4 col-12"; // show card style now that div has content
+
+
 }
 
 
