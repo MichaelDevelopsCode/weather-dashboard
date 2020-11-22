@@ -91,7 +91,7 @@ var citySearchSubmit = function(event) {
 }
 
 var fetchUV = function(lat, lon) {
-    fetch("http://api.openweathermap.org/data/2.5/uvi?lat="+lat+"&lon="+lon+"&"+apiKey)
+    fetch("https://api.openweathermap.org/data/2.5/uvi?lat="+lat+"&lon="+lon+"&"+apiKey)
         .then(function(response) {
             // if request successful
             if(response.ok) {
