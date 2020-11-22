@@ -134,7 +134,7 @@ var createCurrentConditions = function(data) {
     var cityTemp = data.main.temp; // kelvin to fahrenheit
     var cityHumidity = data.main.humidity;
     var windSpeed = data.wind.speed; // convert from meters per sec to mph
-    var icon = "http://openweathermap.org/img/wn/" + data.weather[0].icon + ".png";
+    var icon = "https://openweathermap.org/img/wn/" + data.weather[0].icon + ".png";
     
     // grab current date
     var seconds = data.dt; // grab date timestamp (it's in secs)
@@ -161,7 +161,7 @@ var createFutureConditions = function(data) {
     days.forEach(function(element, i) {
 
         var futureListEl = document.getElementById("future-"+i); // grab corresponding element
-        var icon = "http://openweathermap.org/img/wn/" + element.weather[0].icon + ".png"; // grab icon
+        var icon = "https://openweathermap.org/img/wn/" + element.weather[0].icon + ".png"; // grab icon
         
         // grab current date
         var futureSeconds = element.dt_txt; // grab date timestamp (it's in secs)
