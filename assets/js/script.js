@@ -101,7 +101,7 @@ var fetchUV = function(lat, lon) {
 };
 
 var fetchFutureConditions = function(city) {
-    fetch("https://api.openweathermap.org/data/2.5/forecast?q="+city+"&units=imperial"+"&cnt=5"+"&"+apiKey)
+    fetch("https://api.openweathermap.org/data/2.5/forecast?q="+city+"&units=imperial"+"&"+apiKey)
         .then(function(response) {
             // if request successful
             if(response.ok) {
@@ -140,15 +140,20 @@ var createFutureConditions = function(data) {
     // populate header
     forecastHeaderEl.innerHTML = "5-Day Forecast:";
 
+    // grab every 8th list item to seperate days (each list item is 3hrs apart)
+    var everyNth = (arr, nth) => arr.filter((e, i) => i % nth === nth - 1);
+    var days = everyNth(data.list, 8); // store days in var
+
     // create li elements
-    data.list.forEach(function(element, i) {
+    days.forEach(function(element, i) {
 
         var futureListEl = document.getElementById("future-"+i); // grab corresponding element
         var icon = "http://openweathermap.org/img/wn/" + element.weather[0].icon + ".png"; // grab icon
         
         // grab current date
-        var futureSeconds = element.dt; // grab date timestamp (it's in secs)
-        var futureTime = new Date(futureSeconds * 1000); // convert to miliseconds for new date function
+        var futureSeconds = element.dt_txt; // grab date timestamp (it's in secs)
+        console.log(futureSeconds);
+        var futureTime = new Date(futureSeconds); // convert to miliseconds for new date function
         var futureDate = futureTime.toLocaleDateString("en-US");
 
         // style weather cards bg
