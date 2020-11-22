@@ -79,8 +79,16 @@ var fetchUV = function(lat, lon) {
             // if request successful
             if(response.ok) {
                 response.json().then(function(data) {
-                    var uvIndex = data.value;
-                    uvEl.textContent = "UV Index: " + uvIndex;
+                    var uvIndex = data.value; // grab uv index
+                    uvEl.innerHTML = "UV Index: &nbsp; <span>" + uvIndex + "</span>"; // update content
+                    // if  favorable, moderate, or severe show corresponding color/class
+                    if(uvIndex < 3) { // favorable
+                        uvEl.firstElementChild.style.backgroundColor = "green";
+                    } else if(uvIndex > 3) { // moderate
+                        uvEl.firstElementChild.style.backgroundColor = "orange";
+                    } else { // severe
+                        uvEl.firstElementChild.style.backgroundColor = "red";
+                    }
                 });
             } else {
                 alert("something went wrong"); // not successful request
