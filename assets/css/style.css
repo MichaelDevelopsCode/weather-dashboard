@@ -36,3 +36,6 @@ header {
     width: 100%;
 }
 
+.list-group .list-group-item:hover {
+    cursor: pointer;
+}

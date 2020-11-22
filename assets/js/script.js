@@ -13,9 +13,13 @@ var savedCities = [];
 
 // load history from local storage
 var loadHistory = function() {
+    // clear before loading
+    historyEl.innerHTML = "";
+
     // set only if theres something in local storage
     var localStorageCities = localStorage.getItem("city");
     savedCities = localStorageCities ? JSON.parse(localStorageCities) : [];
+
     // add all cities to list element
     savedCities.forEach(element => {
         // create list elements and add text
@@ -29,20 +33,13 @@ var loadHistory = function() {
 };
 
 // save to local storage and populate list right away
-var saveHistory = function() {
+var saveHistory = function(cityName) {
     savedCities.push(cityName);
     localStorage.setItem("city", JSON.stringify(savedCities));
     loadHistory();
 }
 
-
-var citySearchSubmit = function(event) {
-    // prevent page from reloading
-    event.preventDefault();
-
-    // get searched city
-    var cityName = searchEl.value;
-
+var citySearch = function(cityName) {
     // fetch api
     fetch("https://api.openweathermap.org/data/2.5/weather?q="+ cityName + "&units=imperial" +"&"+apiKey)
         .then(function(response) {
@@ -51,7 +48,7 @@ var citySearchSubmit = function(event) {
 
                 // city was accepted so update array if NOT already in there and save to local storage
                 if(!savedCities.includes(cityName)) {
-                    saveHistory();
+                    saveHistory(cityName);
                 }
 
                 response.json().then(function(data) {
@@ -74,6 +71,22 @@ var citySearchSubmit = function(event) {
             }
 
         });
+}
+
+var citySearchSubmit = function(event) {
+    // prevent page from reloading
+    event.preventDefault();
+
+    // get searched city
+    var cityName = searchEl.value;
+
+    // avoid entering empty spaces
+    if (cityName.trim()==null || cityName.trim()==""|| cityName===" ") {
+        alert("Enter a city");
+        return false;
+    } else {
+        citySearch(cityName);
+    }
 
 }
 
@@ -152,7 +165,6 @@ var createFutureConditions = function(data) {
         
         // grab current date
         var futureSeconds = element.dt_txt; // grab date timestamp (it's in secs)
-        console.log(futureSeconds);
         var futureTime = new Date(futureSeconds); // convert to miliseconds for new date function
         var futureDate = futureTime.toLocaleDateString("en-US");
 
@@ -167,7 +179,17 @@ var createFutureConditions = function(data) {
     });
 }
 
+var historyItemClick = function(event) {
+    var selectedCity = event.target.textContent;
+    searchEl.value = selectedCity;
+
+    citySearch(selectedCity);
+
+}
 
 loadHistory();
 // On submit call function to search for city
 document.addEventListener("submit", citySearchSubmit);
+
+// on history list item click
+historyEl.addEventListener('click', historyItemClick);
