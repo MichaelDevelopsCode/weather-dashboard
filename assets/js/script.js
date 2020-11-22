@@ -54,6 +54,13 @@ var citySearchSubmit = function(event) {
                 }
 
                 response.json().then(function(data) {
+                    // grab lon & lat
+                    var longitude = data.coord.lon;
+                    var latitude = data.coord.lat;
+
+                    // fetch UV data for city based on lon/lat
+                    fetchUV(latitude, longitude);
+
                     // create current weather conditions
                     createCurrentConditions(data);
                 });
@@ -66,20 +73,33 @@ var citySearchSubmit = function(event) {
 
 }
 
+var fetchUV = function(lat, lon) {
+    fetch("http://api.openweathermap.org/data/2.5/uvi?lat="+lat+"&lon="+lon+"&"+apiKey)
+        .then(function(response) {
+            // if request successful
+            if(response.ok) {
+                response.json().then(function(data) {
+                    var uvIndex = data.value;
+                    uvEl.textContent = "UV Index: " + uvIndex;
+                });
+            } else {
+                alert("something went wrong"); // not successful request
+            }
+        });
+}
+
 var createCurrentConditions = function(data) {
     // grab data and assign
     var cityName = data.name;
     var cityTemp = data.main.temp; // kelvin to fahrenheit
     var cityHumidity = data.main.humidity;
     var windSpeed = data.wind.speed; // convert from meters per sec to mph
-    //var uvIndex = data
 
     // update content
     cityHeadingEl.textContent = cityName;
     tempEl.textContent = "Temperature: " + cityTemp + "°F";
     humidityEl.textContent = "Humidity: " + cityHumidity + "%";
     windEl.textContent = "Wind Speed: " + windSpeed + " MPH";
-    // uvEl.textContent = "UV Index: " + "";
     currentCondEl.classList = "card p-4 col-12"; // show card style now that div has content
 
 
