@@ -7,7 +7,32 @@ header {
     background-color: whitesmoke;
 }
 
-#user-form .btn {
+.search-col div form .btn {
     background-color: cornflowerblue;
     color: white;
 } 
+
+.results .future-lists {
+    list-style: none;
+    color: white;
+    padding: 10px;
+    margin: auto;
+    border-radius: 5px;
+}
+
+.results div div p span {
+    width: 50px;
+    height: 26px;
+    text-align: center;
+    border-radius: 3px;
+    color: white;
+}
+
+.flex {
+    display: flex;
+}
+
+.full-width {
+    width: 100%;
+}
+

@@ -7,6 +7,7 @@ var humidityEl = document.getElementById("humidity");
 var windEl = document.getElementById("wind");
 var uvEl = document.getElementById("uv");
 var currentCondEl = document.getElementById("current-conditions");
+var forecastHeaderEl = document.getElementById("forecast-header");
 
 var savedCities = [];
 
@@ -61,6 +62,9 @@ var citySearchSubmit = function(event) {
                     // fetch UV data for city based on lon/lat
                     fetchUV(latitude, longitude);
 
+                    // fetch future weather conditions
+                    fetchFutureConditions(cityName);
+
                     // create current weather conditions
                     createCurrentConditions(data);
                 });
@@ -94,6 +98,21 @@ var fetchUV = function(lat, lon) {
                 alert("something went wrong"); // not successful request
             }
         });
+};
+
+var fetchFutureConditions = function(city) {
+    fetch("https://api.openweathermap.org/data/2.5/forecast?q="+city+"&units=imperial"+"&cnt=5"+"&"+apiKey)
+        .then(function(response) {
+            // if request successful
+            if(response.ok) {
+                response.json().then(function(data){
+                    createFutureConditions(data); // create future weather conditions
+                });
+            } else {
+                alert("something went wrong");
+            }
+
+        });
 }
 
 var createCurrentConditions = function(data) {
@@ -102,15 +121,45 @@ var createCurrentConditions = function(data) {
     var cityTemp = data.main.temp; // kelvin to fahrenheit
     var cityHumidity = data.main.humidity;
     var windSpeed = data.wind.speed; // convert from meters per sec to mph
+    var icon = "http://openweathermap.org/img/wn/" + data.weather[0].icon + ".png";
+    
+    // grab current date
+    var seconds = data.dt; // grab date timestamp (it's in secs)
+    var time = new Date(seconds * 1000); // convert to miliseconds for new date function
+    var date = time.toLocaleDateString("en-US");
 
     // update content
-    cityHeadingEl.textContent = cityName;
-    tempEl.textContent = "Temperature: " + cityTemp + "°F";
+    cityHeadingEl.innerHTML = cityName + " (" + date + ") &nbsp;" + "<img src='"+icon+"'></img>"; 
+    tempEl.textContent = "Temperature: " + cityTemp + " °F";
     humidityEl.textContent = "Humidity: " + cityHumidity + "%";
     windEl.textContent = "Wind Speed: " + windSpeed + " MPH";
     currentCondEl.classList = "card p-4 col-12"; // show card style now that div has content
+}
 
+var createFutureConditions = function(data) {
+    // populate header
+    forecastHeaderEl.innerHTML = "5-Day Forecast:";
 
+    // create li elements
+    data.list.forEach(function(element, i) {
+
+        var futureListEl = document.getElementById("future-"+i); // grab corresponding element
+        var icon = "http://openweathermap.org/img/wn/" + element.weather[0].icon + ".png"; // grab icon
+        
+        // grab current date
+        var futureSeconds = element.dt; // grab date timestamp (it's in secs)
+        var futureTime = new Date(futureSeconds * 1000); // convert to miliseconds for new date function
+        var futureDate = futureTime.toLocaleDateString("en-US");
+
+        // style weather cards bg
+        futureListEl.style.backgroundColor = "cornflowerblue";
+
+        futureListEl.innerHTML =
+            "<h5>" + futureDate + "</h5>" +
+            "<img src="+icon+" />" +
+            "<p>Temp: " + element.main.temp + " °F</p>" +
+            "<p>Humidity: " + element.main.humidity + "%</p>";
+    });
 }
 
 

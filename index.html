@@ -27,17 +27,28 @@
             </div>
         </div>
 
-        <div class="col-8">
-            <div class="row p-2">
+        <div class="results col-8">
+            <div class="flex p-2">
                 <div id="current-conditions">
-                    <h2 class="row p-2" id="city-heading"></h2>
-                    <p class="row p-2" id="temp"></p>
-                    <p class="row p-2" id="humidity"></p>
-                    <p class="row p-2" id="wind"></p>
-                    <p class="row p-2" id="uv"></p>
+                    <h2 class="flex p-2" id="city-heading"></h2>
+                    <p class="flex p-2" id="temp"></p>
+                    <p class="flex p-2" id="humidity"></p>
+                    <p class="flex p-2" id="wind"></p>
+                    <p class="flex p-2" id="uv"></p>
                 </div>
             </div>
-            <div id="future-conditions" class="row"></div>
+            <div class="flex">
+                <div id="future-conditions" class="full-width">
+                    <h2 id="forecast-header" class="flex"></h2>
+                    <ul class="flex p-0">
+                        <li id="future-0" class="future-lists"></li>
+                        <li id="future-1" class="future-lists"></li>
+                        <li id="future-2" class="future-lists"></li>
+                        <li id="future-3" class="future-lists"></li>
+                        <li id="future-4" class="future-lists"></li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </main>
 
