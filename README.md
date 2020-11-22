@@ -2,7 +2,7 @@
 ​
 ## Description 
 ​
-A weather dashboard usong api from openweathermap.org. Displays weather outlook for multiple cities, taking search results and saving history.
+A weather dashboard using api from openweathermap.org. Displays weather outlook for multiple cities, taking search results and saving history.
 
 ## Installation
 User inputs city, data saves through local storage and creates history list that can research city on click. Displays current and 5-days of future weather conditions for cities searched. Data includes temperature, wind speed, humidity, color coded uv index, and date.
